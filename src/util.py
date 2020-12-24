@@ -1,6 +1,5 @@
-#!/usr/bin/python3.6
-# -*- coding: utf-8 -*-
 import logging
+import sys
 
 def setup_logger_stdout(logger_name):
     logger = logging.getLogger(logger_name)

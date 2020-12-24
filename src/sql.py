@@ -6,7 +6,7 @@ import sqlalchemy
 import urllib
 
 class MSSQL(object):
-    '''Wrapper for handling the MSSQL connection'''
+    """Wrapper for handling the MSSQL connection"""
     def __init__(self):
         driver = 'ODBC Driver 17 for SQL Server'
         svr = environ['MSSQL_SERVER']
@@ -40,11 +40,15 @@ class MSSQL(object):
         '''Executes a query and returns the results'''
         return self.execute(query).fetchall()
 
+    def query_one(self, query):
+        '''Executes a query and returns a result'''
+        return self.execute(query).fetchone()
+
     def get_connection(self):
         '''returns the connection object'''
         return self.connection
 
     def get_engine(self):
         '''returns an sqlalchemy engine'''
-        quoted = urllib.parse.quote_plus(this.connection_str)
+        quoted = urllib.parse.quote_plus(self.connection_str)
         return sqlalchemy.create_engine(f'mssql+pyodbc:///?odbc_connect={quoted}')

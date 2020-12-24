@@ -1,11 +1,10 @@
-#!/usr/bin/python3.6
-# -*- coding: utf-8 -*-
 import os
 from dotenv import load_dotenv
 from src.sql import MSSQL
 from src.iex import get_quote
 from src import util
 from datetime import datetime
+import pandas
 
 def get_symbols():
     with MSSQL() as db:
@@ -15,7 +14,7 @@ def get_date_id():
         # today = '2020-12-16'
         today = datetime.today().strftime('%Y-%m-%d')
         sql = f"SELECT TradedateID FROM dbo.TradeDate WHERE TradeDate = '{today}'"
-        rows = db.query(sql)
+        rows = db.query_one(sql)
         return rows[0]
 
 def extract(logger):
@@ -50,7 +49,7 @@ def extract(logger):
     data['LastModifiedDate'] = datetime.now()
     return data
     
-def load(data, logger)
+def load(data, logger):
     logger.info(f"Starting Trading Monkey Load")
 
     with MSSQL() as db:
