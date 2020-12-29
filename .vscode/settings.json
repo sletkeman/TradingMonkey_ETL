@@ -1,9 +1,10 @@
 {
     "python.linting.pylintEnabled": true,
-    "python.pythonPath": "venv/bin/python",
+    //"python.pythonPath": "venv/bin/python",
     "python.linting.ignorePatterns": [
         ".vscode/*.py",
         "**/site-packages/**/*.py",
         "*.tf"
-    ]
+    ],
+    "python.pythonPath": "venv\\Scripts\\python.exe"
 }
