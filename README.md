@@ -9,6 +9,8 @@ Steps to setup and run the notebook
 2. Activate the virtual environement
 <br>
 `source venv/bin/activate`
+<br>
+`venv\Scripts\activate.bat`
 
 3. Install the dependencies
 <br>
@@ -26,9 +28,9 @@ MSSQL_DB=<value>
 MSSQL_UID=<value>
 MSSQL_PWD=<value>
 ```
+5. Install the odbc driver
+https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver15
 
-Note that I'm working on a Mac. The MS SQL Server connection and the pyodbc is likely to work differently on a PC.
-
-5. Start Jupyter notebooks and open test.ipynb once it loads in your browser.
+6. Start Jupyter notebooks and open test.ipynb once it loads in your browser.
 <br>
 `jupyter notebook`
