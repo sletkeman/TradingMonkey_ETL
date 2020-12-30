@@ -9,17 +9,15 @@ import pandas
 def get_symbols():
     with MSSQL() as db:
         return pandas.read_sql("Exec usp_Equity_Read", db.get_connection())
-def get_date_id():
+def get_date_id(date):
     with MSSQL() as db:
-        # today = '2020-12-16'
-        today = datetime.today().strftime('%Y-%m-%d')
-        sql = f"SELECT TradedateID FROM dbo.TradeDate WHERE TradeDate = '{today}'"
+        sql = f"SELECT TradedateID FROM dbo.TradeDate WHERE TradeDate = '{date}'"
         rows = db.query_one(sql)
         return rows[0]
 
-def extract(logger):
+def extract(date, logger):
     logger.info(f"Starting Trading Monkey Extract")
-    date_id = get_date_id()
+    date_id = get_date_id(date)
 
     # get the symbols
     symbols = get_symbols()
@@ -44,7 +42,7 @@ def extract(logger):
         'volume': 'Volume'
     }, inplace = True) 
     data.drop(columns=['symbol'], inplace = True)
-    data['TradeDate'] = datetime.today().strftime('%Y-%m-%d')
+    data['TradeDate'] = date
     data['TradeDateID'] = date_id
     data['LastModifiedDate'] = datetime.now()
     return data
@@ -65,5 +63,8 @@ if __name__ == '__main__':
 
     logger = util.setup_logger_stdout('tradingMonkey_ETL')
 
-    data = extract(logger)
+    today = '2020-12-28'
+    # today = datetime.today().strftime('%Y-%m-%d')
+
+    data = extract(today, logger)
     load(data, logger)
