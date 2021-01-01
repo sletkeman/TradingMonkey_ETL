@@ -4,7 +4,7 @@ Steps to setup and run the notebook
 
 1. Create a virtual environment. (Only do this the first time)
 <br>
-`python3 -m venv venv`
+`python -m venv venv`
 
 2. Activate the virtual environement
 <br>
@@ -34,3 +34,13 @@ https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-s
 6. Start Jupyter notebooks and open test.ipynb once it loads in your browser.
 <br>
 `jupyter notebook`
+
+
+7. Build the service
+<br>
+`pyinstaller -F --hidden-import=win32timezone service.py`
+
+7. Install or update the service. Note that it must be run from an admin console window with the venv activated
+<br>
+`dist\service.exe install`
+

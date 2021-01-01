@@ -1,10 +1,11 @@
 import logging
 import sys
+import os
 
-def setup_logger_stdout(logger_name):
+def setup_logger(logger_name, file_path):
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG)
-    ch = logging.StreamHandler(sys.stdout)
+    ch = logging.FileHandler(file_path, encoding="utf-8")
     formatter = logging.Formatter(
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )

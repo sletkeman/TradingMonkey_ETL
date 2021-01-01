@@ -1,5 +1,3 @@
-import os
-from dotenv import load_dotenv
 from src.sql import MSSQL
 from src.iex import get_quote
 from src import util
@@ -52,19 +50,3 @@ def load(data, logger):
 
     with MSSQL() as db:
         data.to_sql('Stage_IEXData', schema='dbo', con=db.get_engine(), if_exists='append', index=False)
-
-if __name__ == '__main__':
-    load_dotenv()
-
-    # move to working directory...
-    abspath = os.path.abspath(__file__)
-    dname = os.path.dirname(abspath)
-    os.chdir(dname)
-
-    logger = util.setup_logger_stdout('tradingMonkey_ETL')
-
-    today = '2020-12-28'
-    # today = datetime.today().strftime('%Y-%m-%d')
-
-    data = extract(today, logger)
-    load(data, logger)
