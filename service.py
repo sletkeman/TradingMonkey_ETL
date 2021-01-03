@@ -10,6 +10,10 @@ from os import environ
 from src import util
 import etl
 
+# load_dotenv(dotenv_path='C:\\Users\\Scott\\TradingMonkey_ETL\\.env')
+load_dotenv()
+logger = util.setup_logger('tradingMonkey_ETL')
+
 class TradingMonkey_ETL(win32serviceutil.ServiceFramework):
     _svc_name_ = 'TradingMonkey_ETL'
     _svc_display_name_ = 'Trading Monkey ETL'
@@ -17,25 +21,22 @@ class TradingMonkey_ETL(win32serviceutil.ServiceFramework):
 
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
-        socket.setdefaulttimeout(60)
+        # socket.setdefaulttimeout(60)
 
     def SvcStop(self):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
 
     def SvcDoRun(self):
-        # file_path = 'C:\\Users\\Scott\\TradingMonkey_ETL\\TradingMonkey_ETL.log'
-        file_path = 'C:\\TradingMonkey_ETL.log'
-        logger = util.setup_logger('tradingMonkey_ETL', file_path)
+        logger.info('Service Starting')
         try:
-            load_dotenv(dotenv_path='C:\\Users\\Scott\\TradingMonkey_ETL\\.env')
-            # iex_token = [environ[key] for key in environ if key == 'IEX_TOKEN']
-            # logger.info(iex_token)
             today = '2020-12-28'
             # today = datetime.today().strftime('%Y-%m-%d')
             data = etl.extract(today, logger)
             etl.load(data, logger)
         except:
             logger.exception('')
+        finally:
+            logger.info('Service Stopping')
 
 
 if __name__ == '__main__':

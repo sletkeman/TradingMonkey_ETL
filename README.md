@@ -38,7 +38,7 @@ https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-s
 
 7. Build the service
 <br>
-`pyinstaller -F --hidden-import=win32timezone service.py`
+`pyinstaller -F --hidden-import=win32timezone --add-data .env;.env service.py`
 
 7. Install or update the service. Note that it must be run from an admin console window with the venv activated
 <br>

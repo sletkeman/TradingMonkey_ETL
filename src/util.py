@@ -1,16 +1,22 @@
 import logging
+from logging import Formatter, Handler
+import servicemanager
 import sys
 import os
 
-def setup_logger(logger_name, file_path):
+class _Handler(Handler):
+    def emit(self, record):
+        servicemanager.LogInfoMsg(record.getMessage())
+
+def setup_logger(logger_name):
+    formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    
+    handler = _Handler()
+    handler.setFormatter(formatter)
+    
     logger = logging.getLogger(logger_name)
-    logger.setLevel(logging.DEBUG)
-    ch = logging.FileHandler(file_path, encoding="utf-8")
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-    ch.setFormatter(formatter)
-    logger.addHandler(ch)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
     return logger
 
 def chunker(seq, size):
