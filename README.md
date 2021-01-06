@@ -28,6 +28,18 @@ MSSQL_DB=<value>
 MSSQL_UID=<value>
 MSSQL_PWD=<value>
 ```
+
+env.py
+```
+from os import environ
+environ['IEX_TOKEN'] = ''
+environ['IEX_API_VERSION'] = 'iexcloud-sandbox'
+environ['MSSQL_SERVER'] = ''
+environ['MSSQL_DB'] = ''
+environ['MSSQL_UID'] = ''
+environ['MSSQL_PWD'] = ''
+```
+
 5. Install the odbc driver
 https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver15
 
@@ -38,7 +50,7 @@ https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-s
 
 7. Build the service
 <br>
-`pyinstaller -F --hidden-import=win32timezone --add-data .env;.env service.py`
+`pyinstaller -F --hidden-import=win32timezone service.py`
 
 7. Install or update the service. Note that it must be run from an admin console window with the venv activated
 <br>

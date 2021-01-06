@@ -4,14 +4,11 @@ import sys
 import win32event
 import win32service
 import win32serviceutil
-from dotenv import load_dotenv
 from datetime import datetime
-from os import environ
+import env
 from src import util
 import etl
 
-# load_dotenv(dotenv_path='C:\\Users\\Scott\\TradingMonkey_ETL\\.env')
-load_dotenv()
 logger = util.setup_logger('tradingMonkey_ETL')
 
 class TradingMonkey_ETL(win32serviceutil.ServiceFramework):
