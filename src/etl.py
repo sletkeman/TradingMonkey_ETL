@@ -16,9 +16,7 @@ def get_date_id(date):
 
 def extract(date, logger):
     logger.info(f"Starting Trading Monkey Extract")
-    logger.info(f"Date: {date}")
     date_id = get_date_id(date)
-    logger.info(f"DateId: {date_id}")
     # get the symbols
     symbols = get_symbols()
     symbols['Symbol'] = symbols['Symbol'].str.upper()
