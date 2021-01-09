@@ -6,9 +6,8 @@ import win32event
 import win32service
 import win32serviceutil
 import env
-from src import util, etl
+from src import util, etl, iex
 
-logger = util.setup_logger('tradingMonkey_ETL')
 interval = 15 * 60 * 1000 # 15 minutes
 
 class TradingMonkey_ETL(win32serviceutil.ServiceFramework):
@@ -19,6 +18,7 @@ class TradingMonkey_ETL(win32serviceutil.ServiceFramework):
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
         self.waitStop = win32event.CreateEvent(None, 0, 0, None)
+        self.logger = util.setup_logger('tradingMonkey_ETL')
         socket.setdefaulttimeout(60)
 
     def SvcStop(self):
@@ -26,18 +26,23 @@ class TradingMonkey_ETL(win32serviceutil.ServiceFramework):
         win32event.SetEvent(self.waitStop)
 
     def SvcDoRun(self):
-        logger.info('service started')
+        self.logger.info('service started')
         obj = None
+        isMarketOpen = False
         try:
             while obj != win32event.WAIT_OBJECT_0:
-                today = datetime.today().strftime('%Y-%m-%d')
-                data = etl.extract(today, logger)
-                etl.load(data, logger)
+                temp = iex.is_market_open()
+                if isMarketOpen or temp: # run it one more time after the market closes
+                    data = etl.extract(self.logger)
+                    etl.load(data, self.logger)
+                else:
+                    self.logger.info('US Market is closed')
+                isMarketOpen = temp
                 obj = win32event.WaitForSingleObject(self.waitStop, interval)
         except:
-            logger.exception('')
+            self.logger.exception('')
         finally:
-            logger.info('service stopping')
+            self.logger.info('service stopping')
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:

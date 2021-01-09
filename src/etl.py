@@ -14,8 +14,9 @@ def get_date_id(date):
         rows = db.query_one(sql)
         return rows[0]
 
-def extract(date, logger):
+def extract(logger):
     logger.info(f"Starting Trading Monkey Extract")
+    date = datetime.today().strftime('%Y-%m-%d')
     date_id = get_date_id(date)
     # get the symbols
     symbols = get_symbols()
