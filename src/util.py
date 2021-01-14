@@ -4,17 +4,34 @@ import servicemanager
 import sys
 import os
 
-class _Handler(Handler):
+class ServiceManagerLogHandler(logging.Handler):
     def emit(self, record):
-        servicemanager.LogInfoMsg(record.getMessage())
+        try:
+            msg = self.format(record)
+            if record.levelno >= logging.ERROR:
+                servicemanager.LogErrorMsg(msg)
+            elif record.levelno >= logging.INFO:
+                servicemanager.LogiNFOMsg(msg)
+        except Exception:
+            pass
 
 def setup_logger(logger_name):
     formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     
-    handler = _Handler()
+    handler = ServiceManagerLogHandler()
     handler.setFormatter(formatter)
     
     logger = logging.getLogger(logger_name)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+    return logger
+
+def setup_file_logger(logger_name):
+    logger = logging.getLogger(logger_name)
+    path = 'C:\\Users\\Scott\\TradingMonkey_ETL\\TradingMonkey_ETL.log'
+    handler = logging.FileHandler(path, encoding='utf-8')
+    formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
     return logger

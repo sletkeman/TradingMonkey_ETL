@@ -51,11 +51,9 @@ class TradingMonkey_ETL(win32serviceutil.ServiceFramework):
             logger.exception('')         
 
 if __name__ == '__main__':
-    # if len(sys.argv) == 1:
-    #     servicemanager.Initialize()
-    #     servicemanager.PrepareToHostSingle(TradingMonkey_ETL)
-    #     servicemanager.StartServiceCtrlDispatcher()
-    # else:
-    #     win32serviceutil.HandleCommandLine(TradingMonkey_ETL)
-
-    print(iex.is_market_open())
+    if len(sys.argv) == 1:
+        servicemanager.Initialize()
+        servicemanager.PrepareToHostSingle(TradingMonkey_ETL)
+        servicemanager.StartServiceCtrlDispatcher()
+    else:
+        win32serviceutil.HandleCommandLine(TradingMonkey_ETL)
