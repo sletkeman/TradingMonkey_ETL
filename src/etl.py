@@ -10,9 +10,15 @@ def get_symbols():
 
 def get_date_id(date):
     with MSSQL() as db:
-        sql = f"SELECT TradedateID FROM dbo.TradeDate WHERE TradeDate = '{date}'"
-        rows = db.query_one(sql)
-        return rows[0]
+        sql = f"SELECT TradedateID FROM dbo.TradeDate WHERE TradeDate = ?"
+        result = db.query_one(sql, (date,))
+        if result:
+            return result[0]
+        else:
+            raise Exception(f"A tradeDateID could not be found for {date}")
+
+result = get_date_id('2021-01-04')
+print(result)
 
 def extract(logger):
     logger.info(f"Starting Trading Monkey Extract")

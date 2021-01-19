@@ -32,17 +32,17 @@ class MSSQL(object):
         """gets a cursor"""
         return self.connection.cursor()
 
-    def execute(self, query):
+    def execute(self, query, params=()):
         '''Executes a query'''
-        return self.cursor().execute(query)
+        return self.cursor().execute(query, params)
 
-    def query(self, query):
+    def query(self, query, params=()):
         '''Executes a query and returns the results'''
-        return self.execute(query).fetchall()
+        return self.execute(query, params).fetchall()
 
-    def query_one(self, query):
+    def query_one(self, query, params=()):
         '''Executes a query and returns a result'''
-        return self.execute(query).fetchone()
+        return self.execute(query, params).fetchone()
 
     def get_connection(self):
         '''returns the connection object'''
