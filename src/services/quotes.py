@@ -1,17 +1,21 @@
-from datetime import datetime
-import servicemanager
+"""
+    Defines a windows service to load stock quotes every 15 minutes
+"""
+
 import socket
 import sys
+import servicemanager
 import win32event
 import win32service
 import win32serviceutil
-import env
-from src import util, etl, iex
+from lib.util import setup_logger
+from lib.iex import is_market_open
+from logic import quote_load
 
-logger = util.setup_logger('tradingMonkey_ETL')
-interval = 15 * 60 * 1000 # 15 minutes
+logger = setup_logger('tradingMonkey_ETL')
+INTERVAL = 15 * 60 * 1000 # 15 minutes
 
-class TradingMonkey_ETL(win32serviceutil.ServiceFramework):
+class TradingMonkey(win32serviceutil.ServiceFramework):
     _svc_name_ = 'TradingMonkey_ETL'
     _svc_display_name_ = 'Trading Monkey ETL'
     _svc_description_ = 'Extracts stock quotes from the IEX API and loads them to MSSQL'
@@ -39,21 +43,21 @@ class TradingMonkey_ETL(win32serviceutil.ServiceFramework):
 
             isMarketOpen = False
             while obj != win32event.WAIT_OBJECT_0:
-                temp = iex.is_market_open()
+                temp = is_market_open()
                 if isMarketOpen or temp: # run it one more time after the market closes
-                    data = etl.extract(logger)
-                    etl.load(data, logger)
+                    data = quote_load.extract(logger)
+                    quote_load.load(data, logger)
                 else:
                     logger.info('US Market is closed')
                 isMarketOpen = temp
-                obj = win32event.WaitForSingleObject(self.stop_event, interval)
+                obj = win32event.WaitForSingleObject(self.stop_event, INTERVAL)
         except:
-            logger.exception('')         
+            logger.exception('')
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         servicemanager.Initialize()
-        servicemanager.PrepareToHostSingle(TradingMonkey_ETL)
+        servicemanager.PrepareToHostSingle(TradingMonkey)
         servicemanager.StartServiceCtrlDispatcher()
     else:
-        win32serviceutil.HandleCommandLine(TradingMonkey_ETL)
+        win32serviceutil.HandleCommandLine(TradingMonkey)

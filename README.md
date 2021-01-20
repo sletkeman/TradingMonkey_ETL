@@ -14,11 +14,11 @@ Steps to setup and run the notebook
 
 3. Install the dependencies
 <br>
-`pip install -r requirements.txt`
+`pip install -r src\requirements.txt`
 
-4. Create a .env file
+4. Environment variables
 <br>
-Create a file at the root of the project with the name ".env" and save the following to the file:
+For notebooks, create a file at the root of the project with the name ".env" and save the following to the file:
 <br>
 ```
 IEX_TOKEN=<value>
@@ -29,7 +29,7 @@ MSSQL_UID=<value>
 MSSQL_PWD=<value>
 ```
 
-env.py
+for the actual service, create env.py in the src directory
 ```
 from os import environ
 environ['IEX_TOKEN'] = ''
@@ -47,12 +47,13 @@ https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-s
 <br>
 `jupyter notebook`
 
-
 7. Build the service
 <br>
-`pyinstaller -F --hidden-import=win32timezone service.py`
+`pyinstaller -p src --hidden-import=win32timezone src\services\quotes.py`
+<br>
+`pyinstaller src\services\history.py`
 
 7. Install or update the service. Note that it must be run from an admin console window with the venv activated
 <br>
-`dist\service.exe install`
+`dist\quotes\quotes.exe install`
 

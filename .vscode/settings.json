@@ -6,5 +6,9 @@
         "**/site-packages/**/*.py",
         "*.tf"
     ],
-    "python.pythonPath": "venv\\Scripts\\python.exe"
+    "python.pythonPath": "venv\\Scripts\\python.exe",
+    "python.linting.enabled": true,
+    "python.linting.pylintPath": "venv\\Scripts\\pylint",
+    "python.terminal.activateEnvironment": true,
+    "python.linting.pylintUseMinimalCheckers": false
 }
