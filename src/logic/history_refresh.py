@@ -4,16 +4,17 @@
 
 from datetime import datetime, timedelta
 import pandas
-from lib.db import get_equities
+from lib.db import get_equities_needing_refresh
 from lib.iex import get_history
 from lib.util import MSSQL
 
-def extract():
-    equity_rows = get_equities()
+def extract(logger):
+    equity_rows = get_equities_needing_refresh()
     end = datetime.now() - timedelta(days=1)
     history = []
     columns = ['symbol', 'open', 'close', 'high', 'low', 'volume']
     if equity_rows:
+        logger.info(f"Refreshing {len(equity_rows)} equities")
         for row in equity_rows:
             symbol, equity_id, time_span = row
             start = end
@@ -41,7 +42,9 @@ def extract():
             },
             inplace = True
         )
-        return history
+    else:
+        logger.info('No equities need refreshing')
+    return history
 
 def load(data):
     with MSSQL() as db:

@@ -51,9 +51,10 @@ https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-s
 <br>
 `pyinstaller -p src --hidden-import=win32timezone src\services\quotes.py`
 <br>
-`pyinstaller src\services\history.py`
+`pyinstaller -p src --hidden-import=win32timezone src\services\history.py`
 
 7. Install or update the service. Note that it must be run from an admin console window with the venv activated
 <br>
 `dist\quotes\quotes.exe install`
-
+<br>
+`dist\history\history.exe install`

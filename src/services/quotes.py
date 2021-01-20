@@ -8,6 +8,7 @@ import servicemanager
 import win32event
 import win32service
 import win32serviceutil
+import env
 from lib.util import setup_logger
 from lib.iex import is_market_open
 from logic import quote_load
